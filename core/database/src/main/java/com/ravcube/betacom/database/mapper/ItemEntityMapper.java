@@ -2,6 +2,7 @@ package com.ravcube.betacom.database.mapper;
 
 import com.ravcube.betacom.database.entity.ItemEntity;
 import com.ravcube.betacom.database.entity.ItemPermissionEntity;
+import com.ravcube.betacom.database.entity.PermissionRole;
 import com.ravcube.betacom.database.entity.UserEntity;
 import com.ravcube.betacom.domain.spec.PermissionSpec;
 import com.ravcube.betacom.domain.spec.ItemSpec;
@@ -19,6 +20,17 @@ public class ItemEntityMapper {
                 .owner(owner)
                 .title(itemSpec.title())
                 .content(itemSpec.content())
+                .build();
+    }
+
+    public ItemPermissionEntity toPermissionEntity(
+            ItemEntity item,
+            UserEntity user,
+            PermissionSpec permission) {
+        return ItemPermissionEntity.builder()
+                .item(item)
+                .user(user)
+                .role(PermissionRole.valueOf(permission.role().name()))
                 .build();
     }
 

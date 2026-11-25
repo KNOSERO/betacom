@@ -15,15 +15,15 @@ import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import java.time.Instant;
 import java.util.UUID;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+
+import lombok.*;
 
 @Entity
 @Table(name = "item_permissions", uniqueConstraints =
         @UniqueConstraint(name = "uk_item_permissions_item_user", columnNames = {"item_id", "user_id"}))
 @Getter
+@Builder
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ItemPermissionEntity {
 
@@ -49,12 +49,6 @@ public class ItemPermissionEntity {
 
     @Column(name = "granted_at", nullable = false, updatable = false)
     private Instant grantedAt;
-
-    public ItemPermissionEntity(ItemEntity item, UserEntity user, PermissionRole role) {
-        this.item = item;
-        this.user = user;
-        this.role = role;
-    }
 
     @PrePersist
     void setGrantTime() {

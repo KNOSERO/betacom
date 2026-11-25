@@ -1,18 +1,12 @@
 package com.ravcube.betacom.api.controller;
 
+import com.ravcube.betacom.api.dto.*;
+import com.ravcube.betacom.service.ItemPermissionService;
 import com.ravcube.betacom.service.ItemService;
-import com.ravcube.betacom.domain.spec.ItemResponse;
-import com.ravcube.betacom.api.dto.CreateItemRequest;
-import com.ravcube.betacom.api.dto.ItemHistoryEntryResponse;
-import com.ravcube.betacom.api.dto.ItemListResponseDTO;
-import com.ravcube.betacom.api.dto.ItemResponseDTO;
-import com.ravcube.betacom.api.dto.PatchItemRequest;
-import com.ravcube.betacom.api.dto.ShareItemRequest;
-import com.ravcube.betacom.api.dto.ShareItemResponse;
-import com.ravcube.betacom.api.dto.UpdatedItemResponseDTO;
 import jakarta.validation.Valid;
 import java.util.List;
 import java.util.UUID;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -29,9 +23,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class ItemController {
 
     private final ItemService itemService;
+    private final ItemPermissionService itemPermissionService;
 
-    public ItemController(ItemService itemService) {
+    public ItemController(ItemService itemService, ItemPermissionService itemPermissionService) {
         this.itemService = itemService;
+        this.itemPermissionService = itemPermissionService;
     }
 
     @PostMapping
@@ -70,16 +66,18 @@ public class ItemController {
     }
 
     @PostMapping("/{id}/share")
-    public ResponseEntity<ShareItemResponse> share(
+    public ResponseEntity<ShareItemResponseDTO> share(
             @PathVariable("id") UUID id,
             @Valid @RequestBody ShareItemRequest request) {
-        return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
+        ShareItemResponseWithStatusDTO result = itemPermissionService.share(id, request.userId(), request.role().name());
+        return ResponseEntity.status(result.status()).body(result.body());
     }
 
     @DeleteMapping("/{id}/share/{userId}")
     public ResponseEntity<Void> unshare(
             @PathVariable("id") UUID id,
             @PathVariable("userId") UUID userId) {
-        return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
+        itemPermissionService.delete(id, userId);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

@@ -4,7 +4,9 @@ import com.ravcube.betacom.database.entity.ItemEntity;
 import com.ravcube.betacom.database.entity.UserEntity;
 import com.ravcube.betacom.database.mapper.ItemEntityMapper;
 import com.ravcube.betacom.database.repository.ItemEntityRepository;
-import com.ravcube.betacom.database.repository.UserRepository;
+import com.ravcube.betacom.database.repository.ItemPermissionEntityRepository;
+import com.ravcube.betacom.database.repository.UserEntityRepository;
+import com.ravcube.betacom.database.specification.ItemPermissionSpecifications;
 import com.ravcube.betacom.domain.ItemRepository;
 import com.ravcube.betacom.domain.spec.ItemResponse;
 import com.ravcube.betacom.domain.spec.ItemSpec;
@@ -14,22 +16,24 @@ import java.util.UUID;
 import com.ravcube.betacom.domain.spec.UpdatedItemResponse;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 public class ItemRepositoryAdapter implements ItemRepository {
 
     private final ItemEntityRepository repository;
-    private final UserRepository userRepository;
+    private final UserEntityRepository userRepository;
     private final ItemEntityMapper itemEntityMapper;
+    private final ItemPermissionEntityRepository permissionRepository;
 
     public ItemRepositoryAdapter(
             ItemEntityRepository repository,
-            UserRepository userRepository,
-            ItemEntityMapper itemEntityMapper) {
+            UserEntityRepository userRepository,
+            ItemEntityMapper itemEntityMapper,
+            ItemPermissionEntityRepository permissionRepository) {
         this.repository = repository;
         this.userRepository = userRepository;
         this.itemEntityMapper = itemEntityMapper;
+        this.permissionRepository = permissionRepository;
     }
 
     @Override
@@ -40,7 +44,6 @@ public class ItemRepositoryAdapter implements ItemRepository {
     }
 
     @Override
-    @Transactional
     public ItemResponse create(ItemSpec itemSpec) {
         UserEntity owner = userRepository.getReferenceById(itemSpec.ownerId());
         ItemEntity entity = itemEntityMapper.toEntity(itemSpec, owner);

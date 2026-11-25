@@ -3,6 +3,7 @@ package com.ravcube.betacom.api.exception;
 import com.ravcube.betacom.domain.note.InvalidNoteException;
 import com.ravcube.betacom.domain.item.ItemVersionConflictException;
 import com.ravcube.betacom.domain.item.InvalidItemException;
+import com.ravcube.betacom.domain.permission.InvalidPermissionException;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
@@ -48,6 +49,15 @@ public class GlobalExceptionHandler {
                 HttpStatus.BAD_REQUEST,
                 exception.getMessage());
         problem.setTitle("Invalid item");
+        return problem;
+    }
+
+    @ExceptionHandler(InvalidPermissionException.class)
+    public ProblemDetail handleInvalidPermission(InvalidPermissionException exception) {
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(
+                HttpStatus.BAD_REQUEST,
+                exception.getMessage());
+        problem.setTitle("Invalid permission");
         return problem;
     }
 

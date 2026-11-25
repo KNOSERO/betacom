@@ -12,6 +12,7 @@ import com.ravcube.betacom.service.mapper.ItemListMapper;
 import com.ravcube.betacom.service.mapper.ItemMapper;
 import java.util.List;
 import java.util.UUID;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,14 +39,13 @@ public class ItemService {
     }
 
     public List<ItemListResponseDTO> findAll() {
-        UUID mockUserId = sessionHelper.getUserId();
-
-        return itemRepository.findVisibleItems(mockUserId)
+        return itemRepository.findVisibleItems(sessionHelper.getUserId())
                 .stream()
                 .map(itemListMapper::toResponse)
                 .toList();
     }
 
+    @Transactional
     public ItemResponseDTO create(String title, String content) {
         ItemResponse itemResponse = itemProcessService.create(title, content);
         return itemMapper.toResponseDTO(itemResponse);
