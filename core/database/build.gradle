@@ -1,4 +1,5 @@
 dependencies {
+    api project(':domain')
     api libs.jakarta.persistence
     api libs.spring.data.jpa
     compileOnly libs.lombok
