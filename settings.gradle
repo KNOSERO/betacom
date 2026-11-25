@@ -1,1 +1,3 @@
 rootProject.name = 'betacomp'
+
+include 'app', 'core:database'
