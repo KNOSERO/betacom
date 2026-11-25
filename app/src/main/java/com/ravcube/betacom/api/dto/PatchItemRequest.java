@@ -1,4 +1,4 @@
-package com.ravcube.betacomp.api.dto;
+package com.ravcube.betacom.api.dto;
 
 public record PatchItemRequest(String title, String content, Integer version) {
 }

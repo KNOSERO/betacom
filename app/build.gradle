@@ -19,7 +19,7 @@ dependencies {
 }
 
 springBoot {
-    mainClass = 'com.ravcube.betacomp.BetacompApplication'
+    mainClass = 'com.ravcube.betacom.BetacomApplication'
 }
 
 tasks.withType(Test).configureEach {

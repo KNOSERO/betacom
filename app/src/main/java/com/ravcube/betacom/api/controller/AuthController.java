@@ -1,9 +1,9 @@
-package com.ravcube.betacomp.api.controller;
+package com.ravcube.betacom.api.controller;
 
-import com.ravcube.betacomp.api.dto.LoginRequest;
-import com.ravcube.betacomp.api.dto.LoginResponse;
-import com.ravcube.betacomp.api.dto.RegisterRequest;
-import com.ravcube.betacomp.api.dto.RegisterResponse;
+import com.ravcube.betacom.api.dto.LoginRequest;
+import com.ravcube.betacom.api.dto.LoginResponse;
+import com.ravcube.betacom.api.dto.RegisterRequest;
+import com.ravcube.betacom.api.dto.RegisterResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

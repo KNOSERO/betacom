@@ -1,4 +1,4 @@
-# betacomp
+# betacom
 
 ## Run locally
 

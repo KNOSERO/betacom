@@ -1,14 +1,14 @@
-package com.ravcube.betacomp.api.dto;
+package com.ravcube.betacom.api.dto;
 
 import java.time.Instant;
 import java.util.UUID;
 
-public record ItemListResponse(
+public record ItemResponse(
         UUID id,
         String title,
         String content,
         Integer version,
         UUID ownerId,
-        ItemRole myRole,
+        Instant createdAt,
         Instant updatedAt) {
 }

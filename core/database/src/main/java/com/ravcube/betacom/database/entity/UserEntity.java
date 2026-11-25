@@ -1,4 +1,4 @@
-package com.ravcube.betacomp.database.entity;
+package com.ravcube.betacom.database.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

@@ -1,13 +1,13 @@
-package com.ravcube.betacomp.api.controller;
+package com.ravcube.betacom.api.controller;
 
-import com.ravcube.betacomp.api.dto.CreateItemRequest;
-import com.ravcube.betacomp.api.dto.ItemHistoryEntryResponse;
-import com.ravcube.betacomp.api.dto.ItemListResponse;
-import com.ravcube.betacomp.api.dto.ItemResponse;
-import com.ravcube.betacomp.api.dto.PatchItemRequest;
-import com.ravcube.betacomp.api.dto.ShareItemRequest;
-import com.ravcube.betacomp.api.dto.ShareItemResponse;
-import com.ravcube.betacomp.api.dto.UpdatedItemResponse;
+import com.ravcube.betacom.api.dto.CreateItemRequest;
+import com.ravcube.betacom.api.dto.ItemHistoryEntryResponse;
+import com.ravcube.betacom.api.dto.ItemListResponse;
+import com.ravcube.betacom.api.dto.ItemResponse;
+import com.ravcube.betacom.api.dto.PatchItemRequest;
+import com.ravcube.betacom.api.dto.ShareItemRequest;
+import com.ravcube.betacom.api.dto.ShareItemResponse;
+import com.ravcube.betacom.api.dto.UpdatedItemResponse;
 import java.util.List;
 import java.util.UUID;
 import org.springframework.http.HttpStatus;

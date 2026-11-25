@@ -13,9 +13,9 @@ dependencyResolutionManagement {
 }
 
 gradle.beforeProject { project ->
-    project.group = 'com.ravcube.betacomp'
+    project.group = 'com.ravcube.betacom'
 }
 
-rootProject.name = 'betacomp'
+rootProject.name = 'betacom'
 
 include 'app', 'core:database'
