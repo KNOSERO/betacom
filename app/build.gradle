@@ -13,8 +13,11 @@ dependencies {
     implementation platform(libs.spring.boot.bom)
     implementation libs.spring.boot.starter.web
     implementation libs.spring.boot.starter.data.jpa
+    implementation libs.spring.boot.starter.validation
+    implementation libs.mapstruct
     implementation project(':core:database')
 
+    annotationProcessor libs.mapstruct.processor
     testImplementation(libs.junit.jupiter)
     testRuntimeOnly(libs.junit.platform.launcher)
 }
