@@ -6,7 +6,6 @@ import com.ravcube.betacom.domain.spec.ItemSpec;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 
 public final class Item {
@@ -70,7 +69,7 @@ public final class Item {
             throw new ItemVersionConflictException(this.id, expectedVersion, this.version);
         }
 
-        String updatedTitle = title == null || title.isBlank() ? this.note.getTitle() : title;
+        String updatedTitle = title == null ? this.note.getTitle() : title;
         String updatedContent = content == null ? this.note.getContent() : content;
         this.note = new Note(updatedTitle, updatedContent);
     }
