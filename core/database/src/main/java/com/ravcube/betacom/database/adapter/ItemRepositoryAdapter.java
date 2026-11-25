@@ -4,9 +4,7 @@ import com.ravcube.betacom.database.entity.ItemEntity;
 import com.ravcube.betacom.database.entity.UserEntity;
 import com.ravcube.betacom.database.mapper.ItemEntityMapper;
 import com.ravcube.betacom.database.repository.ItemEntityRepository;
-import com.ravcube.betacom.database.repository.ItemPermissionEntityRepository;
 import com.ravcube.betacom.database.repository.UserEntityRepository;
-import com.ravcube.betacom.database.specification.ItemPermissionSpecifications;
 import com.ravcube.betacom.domain.ItemRepository;
 import com.ravcube.betacom.domain.spec.ItemResponse;
 import com.ravcube.betacom.domain.spec.ItemSpec;
@@ -23,17 +21,14 @@ public class ItemRepositoryAdapter implements ItemRepository {
     private final ItemEntityRepository repository;
     private final UserEntityRepository userRepository;
     private final ItemEntityMapper itemEntityMapper;
-    private final ItemPermissionEntityRepository permissionRepository;
 
     public ItemRepositoryAdapter(
             ItemEntityRepository repository,
             UserEntityRepository userRepository,
-            ItemEntityMapper itemEntityMapper,
-            ItemPermissionEntityRepository permissionRepository) {
+            ItemEntityMapper itemEntityMapper) {
         this.repository = repository;
         this.userRepository = userRepository;
         this.itemEntityMapper = itemEntityMapper;
-        this.permissionRepository = permissionRepository;
     }
 
     @Override

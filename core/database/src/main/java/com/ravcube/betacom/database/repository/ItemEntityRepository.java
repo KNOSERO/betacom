@@ -3,9 +3,11 @@ package com.ravcube.betacom.database.repository;
 import com.ravcube.betacom.database.entity.ItemEntity;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import com.ravcube.betacom.database.projection.ItemListProjection;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -49,4 +51,8 @@ public interface ItemEntityRepository extends JpaRepository<ItemEntity, UUID> {
               )
             """)
     List<ItemListProjection> findVisibleItems(@Param("userId") UUID userId);
+
+    @Override
+    @EntityGraph(attributePaths = {"owner", "permissions", "permissions.user"})
+    Optional<ItemEntity> findById(UUID itemId);
 }

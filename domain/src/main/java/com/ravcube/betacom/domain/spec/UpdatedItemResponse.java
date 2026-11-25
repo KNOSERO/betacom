@@ -7,6 +7,6 @@ public record UpdatedItemResponse(
         UUID id,
         String title,
         String content,
-        Integer version,
+        Long version,
         Instant updatedAt) {
 }

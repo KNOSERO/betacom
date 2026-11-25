@@ -7,7 +7,6 @@ import com.ravcube.betacom.database.entity.UserEntity;
 import com.ravcube.betacom.domain.spec.PermissionSpec;
 import com.ravcube.betacom.domain.spec.ItemSpec;
 import com.ravcube.betacom.domain.spec.ItemResponse;
-import java.util.List;
 import org.springframework.stereotype.Component;
 import com.ravcube.betacom.domain.spec.UpdatedItemResponse;
 
@@ -35,21 +34,21 @@ public class ItemEntityMapper {
     }
 
     public ItemSpec toSpec(ItemEntity entity) {
-        return toSpec(entity, List.of());
-    }
-
-    public ItemSpec toSpec(ItemEntity entity, List<ItemPermissionEntity> permissions) {
         return new ItemSpec(
                 entity.getId(),
                 entity.getTitle(),
                 entity.getContent(),
                 entity.getVersion().longValue(),
                 entity.getOwner().getId(),
-                permissions.stream()
-                        .map(permission -> new PermissionSpec(
-                                permission.getUser().getId(),
-                                PermissionSpec.Role.valueOf(permission.getRole().name())))
+                entity.getPermissions().stream()
+                        .map(this::toPermissionSpec)
                         .toList());
+    }
+
+    private PermissionSpec toPermissionSpec(ItemPermissionEntity permission) {
+        return new PermissionSpec(
+                permission.getUser().getId(),
+                PermissionSpec.Role.valueOf(permission.getRole().name()));
     }
 
     public ItemResponse toResponse(ItemEntity entity) {

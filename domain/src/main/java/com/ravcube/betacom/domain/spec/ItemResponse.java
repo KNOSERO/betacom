@@ -7,7 +7,7 @@ public record ItemResponse(
         UUID id,
         String title,
         String content,
-        Integer version,
+        Long version,
         UUID ownerId,
         Instant createdAt,
         Instant updatedAt) {
