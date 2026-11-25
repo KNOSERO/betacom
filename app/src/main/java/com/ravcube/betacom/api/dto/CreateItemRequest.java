@@ -1,4 +1,9 @@
 package com.ravcube.betacom.api.dto;
 
-public record CreateItemRequest(String title, String content) {
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+
+public record CreateItemRequest(
+        @NotBlank @Size(max = 255) String title,
+        String content) {
 }

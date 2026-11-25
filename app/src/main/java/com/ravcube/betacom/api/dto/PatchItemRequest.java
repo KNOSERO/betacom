@@ -1,4 +1,11 @@
 package com.ravcube.betacom.api.dto;
 
-public record PatchItemRequest(String title, String content, Integer version) {
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+
+public record PatchItemRequest(
+        @Size(min = 1, max = 255) String title,
+        String content,
+        @NotNull @Min(0) Integer version) {
 }
