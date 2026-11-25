@@ -11,8 +11,15 @@ java {
 
 dependencies {
     implementation platform(libs.spring.boot.bom)
+    implementation libs.spring.boot.starter.web
+    implementation project(':core:database')
+
     testImplementation(libs.junit.jupiter)
     testRuntimeOnly(libs.junit.platform.launcher)
+}
+
+springBoot {
+    mainClass = 'com.ravcube.betacomp.BetacompApplication'
 }
 
 tasks.withType(Test).configureEach {
