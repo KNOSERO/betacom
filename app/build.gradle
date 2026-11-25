@@ -1,0 +1,27 @@
+plugins {
+    alias(libs.plugins.spring.boot)
+    id 'java'
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(libs.versions.java.get().toInteger())
+    }
+}
+
+dependencies {
+    implementation platform(libs.spring.boot.bom)
+    implementation libs.spring.boot.starter.web
+    implementation project(':core:database')
+
+    testImplementation(libs.junit.jupiter)
+    testRuntimeOnly(libs.junit.platform.launcher)
+}
+
+springBoot {
+    mainClass = 'com.ravcube.betacom.BetacomApplication'
+}
+
+tasks.withType(Test).configureEach {
+    useJUnitPlatform()
+}

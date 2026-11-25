@@ -1,0 +1,21 @@
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        mavenCentral()
+    }
+}
+
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        mavenCentral()
+    }
+}
+
+gradle.beforeProject { project ->
+    project.group = 'com.ravcube.betacom'
+}
+
+rootProject.name = 'betacom'
+
+include 'app', 'core:database'

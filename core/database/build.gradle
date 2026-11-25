@@ -1,0 +1,6 @@
+dependencies {
+    api libs.jakarta.persistence
+    compileOnly libs.lombok
+    annotationProcessor platform(libs.spring.boot.bom)
+    annotationProcessor libs.lombok
+}
