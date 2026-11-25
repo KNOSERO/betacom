@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.ravcube.betacom.domain.note.InvalidNoteException;
+import com.ravcube.betacom.domain.spec.PermissionSpec;
 import com.ravcube.betacom.domain.spec.ItemSpec;
 import java.util.List;
 import java.util.UUID;
@@ -105,5 +106,52 @@ class ItemTest {
     @Test
     void givenNullOwnerId_whenCreating_thenThrowsInvalidItemException() {
         assertThrows(InvalidItemException.class, () -> Item.create("Title", "Content", null));
+    }
+
+    @Test
+    void givenExistingPermission_whenUpdatingPermission_thenReturnsTrue() {
+        UUID recipientId = UUID.randomUUID();
+        Item item = Item.fromSpec(UUID.randomUUID(), new ItemSpec(
+                UUID.randomUUID(), "Title", "Content", 0L, UUID.randomUUID(),
+                List.of(new PermissionSpec(recipientId, PermissionSpec.Role.VIEWER))));
+
+        assertEquals(true, item.updatePermission(recipientId));
+    }
+
+    @Test
+    void givenNoExistingPermission_whenUpdatingPermission_thenReturnsFalse() {
+        Item item = Item.create("Title", "Content", UUID.randomUUID());
+
+        assertEquals(false, item.updatePermission(UUID.randomUUID()));
+    }
+
+    @Test
+    void givenOwner_whenCheckingEditorAccess_thenAllowsAccess() {
+        UUID ownerId = UUID.randomUUID();
+        Item item = Item.create("Title", "Content", ownerId);
+
+        item.isEditor(ownerId);
+    }
+
+    @Test
+    void givenEditor_whenCheckingEditorAccess_thenAllowsAccess() {
+        UUID editorId = UUID.randomUUID();
+        Item item = itemWithPermission(editorId, PermissionSpec.Role.EDITOR);
+
+        item.isEditor(editorId);
+    }
+
+    @Test
+    void givenNonOwner_whenCheckingOwnerAccess_thenThrowsAccessItemException() {
+        Item item = Item.create("Title", "Content", UUID.randomUUID());
+
+        assertThrows(AccessItemException.class, () -> item.isOwner(UUID.randomUUID()));
+    }
+
+    private Item itemWithPermission(UUID userId, PermissionSpec.Role role) {
+        UUID ownerId = UUID.randomUUID();
+        return Item.fromSpec(ownerId, new ItemSpec(
+                UUID.randomUUID(), "Title", "Content", 0L, ownerId,
+                List.of(new PermissionSpec(userId, role))));
     }
 }

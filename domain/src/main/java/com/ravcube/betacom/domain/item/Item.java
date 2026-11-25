@@ -74,8 +74,15 @@ public final class Item {
         this.note = new Note(updatedTitle, updatedContent);
     }
 
+    public Boolean updatePermission(UUID userId) {
+        if(ownerId.equals(userId)) {
+            throw new RuntimeException("");
+        }
+        return this.permission.stream().anyMatch(el -> el.hasPermission(userId));
+    }
+
     public void isEditor(UUID id) {
-        if (this.ownerId.equals(id) || this.permission.stream().anyMatch(permission -> permission.haveEditor(id))) {
+        if (this.ownerId.equals(id) || this.permission.stream().anyMatch(permission -> permission.hasEditor(id))) {
             return;
         }
         throw new AccessItemException("Have no permission to edit this item");
