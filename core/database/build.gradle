@@ -2,6 +2,8 @@ dependencies {
     api project(':domain')
     api libs.jakarta.persistence
     api libs.spring.data.jpa
+    implementation libs.hibernate.core
+    implementation libs.hibernate.envers
     compileOnly libs.lombok
     annotationProcessor platform(libs.spring.boot.bom)
     annotationProcessor libs.lombok

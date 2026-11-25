@@ -6,17 +6,26 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import jakarta.persistence.Version;
+import org.hibernate.envers.Audited;
+import org.hibernate.envers.NotAudited;
+import org.hibernate.envers.RelationTargetAuditMode;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 import lombok.*;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
 @Table(name = "items")
+@Audited
 @SQLDelete(sql = "UPDATE items SET deleted = true, version = version + 1, updated_at = CURRENT_TIMESTAMP WHERE id = ? AND version = ?")
 @SQLRestriction("deleted = false")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -30,9 +39,15 @@ public class ItemEntity {
     private UUID id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
     @JoinColumn(name = "owner_id", nullable = false)
     @Setter
     private UserEntity owner;
+
+    @OneToMany(mappedBy = "item", fetch = FetchType.LAZY)
+    @NotAudited
+    @Builder.Default
+    private List<ItemPermissionEntity> permissions = new ArrayList<>();
 
     @Column(nullable = false, length = 255)
     @Setter
@@ -44,7 +59,7 @@ public class ItemEntity {
 
     @Version
     @Column(nullable = false)
-    private Integer version;
+    private Long version;
 
     @Column(nullable = false, columnDefinition = "BOOLEAN DEFAULT FALSE")
     @Setter
