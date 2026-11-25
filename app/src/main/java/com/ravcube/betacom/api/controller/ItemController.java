@@ -1,5 +1,6 @@
 package com.ravcube.betacom.api.controller;
 
+import com.ravcube.betacom.service.SearchItemService;
 import com.ravcube.betacom.api.dto.CreateItemRequest;
 import com.ravcube.betacom.api.dto.ItemHistoryEntryResponse;
 import com.ravcube.betacom.api.dto.ItemListResponse;
@@ -8,6 +9,7 @@ import com.ravcube.betacom.api.dto.PatchItemRequest;
 import com.ravcube.betacom.api.dto.ShareItemRequest;
 import com.ravcube.betacom.api.dto.ShareItemResponse;
 import com.ravcube.betacom.api.dto.UpdatedItemResponse;
+import jakarta.validation.Valid;
 import java.util.List;
 import java.util.UUID;
 import org.springframework.http.HttpStatus;
@@ -25,20 +27,26 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/items")
 public class ItemController {
 
+    private final SearchItemService searchItemService;
+
+    public ItemController(SearchItemService searchItemService) {
+        this.searchItemService = searchItemService;
+    }
+
     @PostMapping
-    public ResponseEntity<ItemResponse> create(@RequestBody CreateItemRequest request) {
+    public ResponseEntity<ItemResponse> create(@Valid @RequestBody CreateItemRequest request) {
         return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
     }
 
     @GetMapping
     public ResponseEntity<List<ItemListResponse>> list() {
-        return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
+        return ResponseEntity.ok(searchItemService.findAll());
     }
 
     @PatchMapping("/{id}")
     public ResponseEntity<UpdatedItemResponse> update(
             @PathVariable("id") UUID id,
-            @RequestBody PatchItemRequest request) {
+            @Valid @RequestBody PatchItemRequest request) {
         return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
     }
 
@@ -55,7 +63,7 @@ public class ItemController {
     @PostMapping("/{id}/share")
     public ResponseEntity<ShareItemResponse> share(
             @PathVariable("id") UUID id,
-            @RequestBody ShareItemRequest request) {
+            @Valid @RequestBody ShareItemRequest request) {
         return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
     }
 
