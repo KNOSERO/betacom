@@ -1,0 +1,19 @@
+configure([project] + subprojects) {
+    apply plugin: 'java-library'
+
+    java {
+        toolchain {
+            languageVersion = JavaLanguageVersion.of(libs.versions.java.get().toInteger())
+        }
+    }
+
+    dependencies {
+        implementation platform(libs.spring.boot.bom)
+        testImplementation(libs.junit.jupiter)
+        testRuntimeOnly(libs.junit.platform.launcher)
+    }
+
+    tasks.withType(Test).configureEach {
+        useJUnitPlatform()
+    }
+}
