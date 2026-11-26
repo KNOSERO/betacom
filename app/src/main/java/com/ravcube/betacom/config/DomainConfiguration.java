@@ -21,7 +21,7 @@ public class DomainConfiguration {
     }
 
     @Bean
-    public ItemProcessService itemService(ItemRepository itemRepository, SessionHelper sessionHelper) {
+    public ItemProcessService itemProcessService(ItemRepository itemRepository, SessionHelper sessionHelper) {
         return new ItemProcessService(itemRepository, sessionHelper);
     }
 

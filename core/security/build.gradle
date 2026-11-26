@@ -4,4 +4,5 @@ dependencies {
     api libs.spring.boot.starter.security
     api libs.spring.boot.starter.oauth2.resource.server
     compileOnly libs.servlet.api
+    implementation libs.bucket4j
 }

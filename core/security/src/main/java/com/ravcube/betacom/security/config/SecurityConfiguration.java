@@ -3,6 +3,8 @@ package com.ravcube.betacom.security.config;
 import com.nimbusds.jose.jwk.source.ImmutableSecret;
 import com.ravcube.betacom.security.jwt.JwtSecurityProperties;
 import com.ravcube.betacom.security.jwt.JwtTokenService;
+import com.ravcube.betacom.security.ratelimit.LoginRateLimitFilter;
+import com.ravcube.betacom.security.ratelimit.LoginRateLimitProperties;
 import com.ravcube.betacom.security.session.RequestSessionHelper;
 import com.ravcube.betacom.security.session.SessionHelperFilter;
 import java.nio.charset.StandardCharsets;
@@ -27,7 +29,7 @@ import org.springframework.security.oauth2.jwt.JwtValidators;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
-@EnableConfigurationProperties(JwtSecurityProperties.class)
+@EnableConfigurationProperties({JwtSecurityProperties.class, LoginRateLimitProperties.class})
 public class SecurityConfiguration {
 
     @Bean
@@ -64,7 +66,10 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    SecurityFilterChain securityFilterChain(HttpSecurity http, RequestSessionHelper sessionHelper) throws Exception {
+    SecurityFilterChain securityFilterChain(
+            HttpSecurity http,
+            RequestSessionHelper sessionHelper,
+            LoginRateLimitProperties rateLimitProperties) throws Exception {
         return http
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -73,6 +78,7 @@ public class SecurityConfiguration {
                         .requestMatchers("/items/**").authenticated()
                         .anyRequest().denyAll())
                 .oauth2ResourceServer(resourceServer -> resourceServer.jwt(Customizer.withDefaults()))
+                .addFilterBefore(new LoginRateLimitFilter(rateLimitProperties), BearerTokenAuthenticationFilter.class)
                 .addFilterAfter(new SessionHelperFilter(sessionHelper), BearerTokenAuthenticationFilter.class)
                 .build();
     }
