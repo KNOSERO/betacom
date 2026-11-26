@@ -74,6 +74,21 @@ class ItemPermissionProcessServiceTest {
     }
 
     @Test
+    void givenOwner_whenSharingItemWithSelf_thenRequestIsRejectedAndPermissionIsNotPersisted() {
+        // Given
+        UUID ownerId = UUID.randomUUID();
+        UUID itemId = UUID.randomUUID();
+        when(session.getUserId()).thenReturn(ownerId);
+        when(items.findById(itemId)).thenReturn(new ItemSpec(
+                itemId, "Title", "Content", 0L, ownerId, List.of()));
+
+        // When / Then
+        assertThrows(InvalidPermissionException.class,
+                () -> service.share(itemId, ownerId, "VIEWER"));
+        verifyNoInteractions(permissions);
+    }
+
+    @Test
     void givenNonOwner_whenSharingItem_thenAccessIsDeniedAndPermissionIsNotCreated() {
         // Given
         UUID itemId = UUID.randomUUID();

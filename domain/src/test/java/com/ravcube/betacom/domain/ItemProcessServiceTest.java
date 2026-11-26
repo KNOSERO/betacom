@@ -60,6 +60,30 @@ class ItemProcessServiceTest {
     }
 
     @Test
+    void givenOwner_whenUpdatingItem_thenUpdatedItemIsPersisted() {
+        // Given
+        UUID ownerId = UUID.randomUUID();
+        UUID itemId = UUID.randomUUID();
+        when(session.getUserId()).thenReturn(ownerId);
+        when(items.findById(itemId)).thenReturn(new ItemSpec(
+                itemId, "Old title", "Old content", 3L, ownerId, List.of()));
+        UpdatedItemResponse expected = new UpdatedItemResponse(
+                itemId, "New title", "New content", 3L, Instant.now());
+        when(items.update(any())).thenReturn(expected);
+
+        // When
+        UpdatedItemResponse actual = service.update(itemId, "New title", "New content", 3L);
+
+        // Then
+        assertEquals(expected, actual);
+        ArgumentCaptor<ItemSpec> captor = ArgumentCaptor.forClass(ItemSpec.class);
+        verify(items).update(captor.capture());
+        assertEquals(itemId, captor.getValue().id());
+        assertEquals("New title", captor.getValue().title());
+        assertEquals("New content", captor.getValue().content());
+    }
+
+    @Test
     void givenViewer_whenUpdatingItem_thenAccessIsDeniedAndNothingIsPersisted() {
         // Given
         UUID viewerId = UUID.randomUUID();
@@ -67,6 +91,20 @@ class ItemProcessServiceTest {
         when(session.getUserId()).thenReturn(viewerId);
         when(items.findById(itemId)).thenReturn(new ItemSpec(itemId, "Title", "Content", 0L,
                 UUID.randomUUID(), List.of(new PermissionSpec(viewerId, PermissionSpec.Role.VIEWER))));
+
+        // When / Then
+        assertThrows(AccessItemException.class, () -> service.update(itemId, "New", "Body", 0L));
+        verify(items, never()).update(any());
+    }
+
+    @Test
+    void givenUserWithoutPermission_whenUpdatingItem_thenAccessIsDeniedAndNothingIsPersisted() {
+        // Given
+        UUID userId = UUID.randomUUID();
+        UUID itemId = UUID.randomUUID();
+        when(session.getUserId()).thenReturn(userId);
+        when(items.findById(itemId)).thenReturn(new ItemSpec(
+                itemId, "Title", "Content", 0L, UUID.randomUUID(), List.of()));
 
         // When / Then
         assertThrows(AccessItemException.class, () -> service.update(itemId, "New", "Body", 0L));
