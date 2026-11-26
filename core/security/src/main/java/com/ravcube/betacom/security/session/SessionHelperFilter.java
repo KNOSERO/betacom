@@ -1,5 +1,6 @@
 package com.ravcube.betacom.security.session;
 
+import com.ravcube.betacom.database.audit.AuditRevisionContext;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -24,11 +25,18 @@ public class SessionHelperFilter extends OncePerRequestFilter {
             HttpServletRequest request,
             HttpServletResponse response,
             FilterChain filterChain) throws ServletException, IOException {
+
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication instanceof JwtAuthenticationToken jwtAuthentication && authentication.isAuthenticated()) {
-            sessionHelper.setUserId(UUID.fromString(jwtAuthentication.getToken().getSubject()));
+            UUID userId = UUID.fromString(jwtAuthentication.getToken().getSubject());
+            sessionHelper.setUserId(userId);
+            AuditRevisionContext.setCreatedBy(userId);
         }
 
-        filterChain.doFilter(request, response);
+        try {
+            filterChain.doFilter(request, response);
+        } finally {
+            AuditRevisionContext.clear();
+        }
     }
 }

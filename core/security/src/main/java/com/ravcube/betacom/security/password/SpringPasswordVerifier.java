@@ -1,6 +1,6 @@
 package com.ravcube.betacom.security.password;
 
-import com.ravcube.betacom.domain.PasswordVerifier;
+import com.ravcube.betacom.domain.port.PasswordVerifier;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 

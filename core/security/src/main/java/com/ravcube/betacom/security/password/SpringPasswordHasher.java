@@ -1,6 +1,6 @@
 package com.ravcube.betacom.security.password;
 
-import com.ravcube.betacom.domain.PasswordHasher;
+import com.ravcube.betacom.domain.port.PasswordHasher;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
