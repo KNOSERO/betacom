@@ -97,6 +97,7 @@ class UpdateItemEndpointTest extends ApiIntegrationTestBase {
                 .patch("/items/{id}", item.id())
         .then()
                 .statusCode(409)
-                .body("title", equalTo("Version conflict"));
+                .body("title", equalTo("Version conflict"))
+                .body("currentVersion", equalTo(item.version()));
     }
 }

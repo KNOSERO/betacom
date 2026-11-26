@@ -7,20 +7,31 @@ import com.ravcube.betacom.domain.item.InvalidItemException;
 import com.ravcube.betacom.domain.permission.InvalidPermissionException;
 import com.ravcube.betacom.domain.authentication.InvalidCredentialsException;
 import com.ravcube.betacom.domain.authentication.UserAlreadyExistsException;
+import com.ravcube.betacom.database.entity.ItemEntity;
+import com.ravcube.betacom.database.repository.ItemEntityRepository;
 import java.util.Map;
+import java.util.Optional;
 import java.util.TreeMap;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.dao.OptimisticLockingFailureException;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    private final ItemEntityRepository itemRepository;
+
+    public GlobalExceptionHandler(ItemEntityRepository itemRepository) {
+        this.itemRepository = itemRepository;
+    }
 
     @ExceptionHandler(InvalidCredentialsException.class)
     public ProblemDetail handleInvalidCredentials(InvalidCredentialsException exception) {
@@ -103,12 +114,31 @@ public class GlobalExceptionHandler {
         return problem;
     }
 
-    @ExceptionHandler({ItemVersionConflictException.class, OptimisticLockingFailureException.class})
-    public ProblemDetail handleVersionConflict(RuntimeException exception) {
+    @ExceptionHandler(ItemVersionConflictException.class)
+    public ProblemDetail handleVersionConflict(ItemVersionConflictException exception) {
         ProblemDetail problem = ProblemDetail.forStatusAndDetail(
                 HttpStatus.CONFLICT,
                 exception.getMessage());
         problem.setTitle("Version conflict");
+        problem.setProperty("currentVersion", exception.getCurrentVersion());
         return problem;
+    }
+
+    @ExceptionHandler(OptimisticLockingFailureException.class)
+    public ProblemDetail handleOptimisticLockingFailure(OptimisticLockingFailureException exception) {
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(
+                HttpStatus.CONFLICT,
+                "The item was modified by another request. Fetch the latest version and retry.");
+        problem.setTitle("Version conflict");
+        currentVersionFrom(exception).ifPresent(version -> problem.setProperty("currentVersion", version));
+        return problem;
+    }
+
+    private Optional<Long> currentVersionFrom(OptimisticLockingFailureException exception) {
+        if (exception instanceof ObjectOptimisticLockingFailureException optimisticFailure
+                && optimisticFailure.getIdentifier() instanceof UUID itemId) {
+            return itemRepository.findById(itemId).map(ItemEntity::getVersion);
+        }
+        return Optional.empty();
     }
 }

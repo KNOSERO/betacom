@@ -2,6 +2,7 @@ package com.ravcube.betacom.domain.item;
 
 import com.ravcube.betacom.domain.note.Note;
 import com.ravcube.betacom.domain.permission.Permission;
+import com.ravcube.betacom.domain.permission.InvalidPermissionException;
 import com.ravcube.betacom.domain.spec.ItemSpec;
 
 import java.util.ArrayList;
@@ -76,7 +77,7 @@ public final class Item {
 
     public Boolean updatePermission(UUID userId) {
         if(ownerId.equals(userId)) {
-            throw new RuntimeException("");
+            throw new InvalidPermissionException("An item cannot be shared with its owner.");
         }
         return this.permission.stream().anyMatch(el -> el.hasPermission(userId));
     }

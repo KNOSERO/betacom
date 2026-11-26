@@ -63,6 +63,22 @@ class ShareItemEndpointTest extends ApiIntegrationTestBase {
     }
 
     @Test
+    void givenOwner_whenSharingItemWithSelf_thenReturnsBadRequest() {
+        AuthenticatedUser owner = authenticatedUser();
+        Item item = createItem(owner.token());
+
+        given()
+                .auth().oauth2(owner.token())
+                .contentType(JSON)
+                .body(Map.of("userId", owner.user().id(), "role", "VIEWER"))
+        .when()
+                .post("/items/{id}/share", item.id())
+        .then()
+                .statusCode(400)
+                .body("title", equalTo("Invalid permission"));
+    }
+
+    @Test
     void givenAnonymousRequest_whenSharingItem_thenReturnsUnauthorized() {
         given()
                 .contentType(JSON)

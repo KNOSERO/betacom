@@ -28,29 +28,36 @@ class ConcurrentItemUpdateEndpointTest extends ApiIntegrationTestBase {
         CountDownLatch start = new CountDownLatch(1);
 
         try {
-            Future<Integer> firstUpdate = requests.submit(() -> updateItem(
+            Future<Response> firstUpdate = requests.submit(() -> updateItem(
                     owner.token(), item, "Concurrent edit A", ready, start));
-            Future<Integer> secondUpdate = requests.submit(() -> updateItem(
+            Future<Response> secondUpdate = requests.submit(() -> updateItem(
                     owner.token(), item, "Concurrent edit B", ready, start));
 
             assertTrue(ready.await(10, TimeUnit.SECONDS), "both HTTP requests should be ready before release");
             start.countDown();
 
-            List<Integer> statuses = List.of(
+            List<Response> responses = List.of(
                     firstUpdate.get(20, TimeUnit.SECONDS),
                     secondUpdate.get(20, TimeUnit.SECONDS));
+            List<Integer> statuses = responses.stream().map(Response::statusCode).toList();
 
             assertEquals(1, statuses.stream().filter(status -> status == 200).count(),
                     "one update should persist");
             assertEquals(1, statuses.stream().filter(status -> status == 409).count(),
                     "the competing update should detect the version conflict");
+            Response conflict = responses.stream()
+                    .filter(response -> response.statusCode() == 409)
+                    .findFirst()
+                    .orElseThrow();
+            assertEquals(1, (Integer) conflict.jsonPath().getInt("currentVersion"),
+                    "the conflict should include the version committed by the winning request");
         } finally {
             start.countDown();
             requests.shutdownNow();
         }
     }
 
-    private int updateItem(
+    private Response updateItem(
             String token,
             Item item,
             String title,
@@ -61,12 +68,11 @@ class ConcurrentItemUpdateEndpointTest extends ApiIntegrationTestBase {
             throw new IllegalStateException("Concurrent update test did not release its requests");
         }
 
-        Response response = given()
+        return given()
                 .auth().oauth2(token)
                 .contentType(JSON)
                 .body(Map.of("title", title, "version", item.version()))
         .when()
                 .patch("/items/{id}", item.id());
-        return response.statusCode();
     }
 }

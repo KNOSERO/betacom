@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.ravcube.betacom.domain.note.InvalidNoteException;
+import com.ravcube.betacom.domain.permission.InvalidPermissionException;
 import com.ravcube.betacom.domain.spec.PermissionSpec;
 import com.ravcube.betacom.domain.spec.ItemSpec;
 import java.util.List;
@@ -123,6 +124,14 @@ class ItemTest {
         Item item = Item.create("Title", "Content", UUID.randomUUID());
 
         assertEquals(false, item.updatePermission(UUID.randomUUID()));
+    }
+
+    @Test
+    void givenOwner_whenGrantingPermissionToSelf_thenThrowsInvalidPermissionException() {
+        UUID ownerId = UUID.randomUUID();
+        Item item = Item.create("Title", "Content", ownerId);
+
+        assertThrows(InvalidPermissionException.class, () -> item.updatePermission(ownerId));
     }
 
     @Test
