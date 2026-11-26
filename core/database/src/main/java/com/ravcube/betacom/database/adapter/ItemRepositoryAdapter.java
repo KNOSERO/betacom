@@ -5,7 +5,7 @@ import com.ravcube.betacom.database.entity.UserEntity;
 import com.ravcube.betacom.database.mapper.ItemEntityMapper;
 import com.ravcube.betacom.database.repository.ItemEntityRepository;
 import com.ravcube.betacom.database.repository.UserEntityRepository;
-import com.ravcube.betacom.domain.ItemRepository;
+import com.ravcube.betacom.domain.port.ItemRepository;
 import com.ravcube.betacom.domain.spec.ItemResponse;
 import com.ravcube.betacom.domain.spec.ItemSpec;
 
@@ -13,9 +13,9 @@ import java.util.UUID;
 
 import com.ravcube.betacom.domain.spec.UpdatedItemResponse;
 import jakarta.persistence.EntityNotFoundException;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 
-@Repository
+@Service
 public class ItemRepositoryAdapter implements ItemRepository {
 
     private final ItemEntityRepository repository;

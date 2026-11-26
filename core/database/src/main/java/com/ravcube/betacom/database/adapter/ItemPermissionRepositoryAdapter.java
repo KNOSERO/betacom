@@ -9,15 +9,15 @@ import com.ravcube.betacom.database.repository.ItemEntityRepository;
 import com.ravcube.betacom.database.repository.ItemPermissionEntityRepository;
 import com.ravcube.betacom.database.repository.UserEntityRepository;
 import com.ravcube.betacom.database.specification.ItemPermissionSpecifications;
-import com.ravcube.betacom.domain.ItemPermissionRepository;
+import com.ravcube.betacom.domain.port.ItemPermissionRepository;
 import com.ravcube.betacom.domain.spec.PermissionSpec;
 import com.ravcube.betacom.domain.spec.ShareItemResponse;
 import com.ravcube.betacom.domain.spec.ShareRole;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.UUID;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 
-@Repository
+@Service
 public class ItemPermissionRepositoryAdapter implements ItemPermissionRepository {
 
     private final ItemPermissionEntityRepository permissionRepository;
