@@ -1,5 +1,8 @@
 package com.ravcube.betacom.domain;
 
+import com.ravcube.betacom.domain.port.ItemPermissionRepository;
+import com.ravcube.betacom.domain.port.ItemRepository;
+import com.ravcube.betacom.domain.port.SessionHelper;
 import com.ravcube.betacom.domain.item.Item;
 import com.ravcube.betacom.domain.permission.Permission;
 import com.ravcube.betacom.domain.spec.ShareItemResponse;
