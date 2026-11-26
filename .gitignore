@@ -3,3 +3,6 @@
 build
 .kotlin
 tmp
+.env
+.env.*
+!.env.example
