@@ -31,7 +31,7 @@ public class ItemController {
     }
 
     @PostMapping
-    public ResponseEntity<ItemResponseDTO> create(@Valid @RequestBody CreateItemRequest request) {
+    public ResponseEntity<ItemResponseDTO> create(@Valid @RequestBody CreateItemRequestDTO request) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(itemService.create(request.title(), request.content()));
     }
@@ -44,7 +44,7 @@ public class ItemController {
     @PatchMapping("/{id}")
     public ResponseEntity<UpdatedItemResponseDTO> update(
             @PathVariable("id") UUID id,
-            @Valid @RequestBody PatchItemRequest request) {
+            @Valid @RequestBody PatchItemRequestDTO request) {
 
         return ResponseEntity.status(HttpStatus.OK).body(itemService.update(
                 id,
@@ -61,14 +61,14 @@ public class ItemController {
     }
 
     @GetMapping("/{id}/history")
-    public ResponseEntity<List<ItemHistoryEntryResponse>> history(@PathVariable("id") UUID id) {
+    public ResponseEntity<List<ItemHistoryEntryResponseDTO>> history(@PathVariable("id") UUID id) {
         return ResponseEntity.ok(itemService.history(id));
     }
 
     @PostMapping("/{id}/share")
     public ResponseEntity<ShareItemResponseDTO> share(
             @PathVariable("id") UUID id,
-            @Valid @RequestBody ShareItemRequest request) {
+            @Valid @RequestBody ShareItemRequestDTO request) {
         ShareItemResponseWithStatusDTO result = itemPermissionService.share(id, request.userId(), request.role().name());
         return ResponseEntity.status(result.status()).body(result.body());
     }

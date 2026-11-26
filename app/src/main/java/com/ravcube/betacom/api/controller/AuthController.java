@@ -1,9 +1,9 @@
 package com.ravcube.betacom.api.controller;
 
-import com.ravcube.betacom.api.dto.LoginRequest;
-import com.ravcube.betacom.api.dto.LoginResponse;
-import com.ravcube.betacom.api.dto.RegisterRequest;
-import com.ravcube.betacom.api.dto.RegisterResponse;
+import com.ravcube.betacom.api.dto.LoginRequestDTO;
+import com.ravcube.betacom.api.dto.LoginResponseDTO;
+import com.ravcube.betacom.api.dto.RegisterRequestDTO;
+import com.ravcube.betacom.api.dto.RegisterResponseDTO;
 import com.ravcube.betacom.service.AuthService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -22,12 +22,12 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<RegisterResponse> register(@Valid @RequestBody RegisterRequest request) {
+    public ResponseEntity<RegisterResponseDTO> register(@Valid @RequestBody RegisterRequestDTO request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(authService.register(request));
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest request) {
+    public ResponseEntity<LoginResponseDTO> login(@Valid @RequestBody LoginRequestDTO request) {
         return ResponseEntity.ok(authService.login(request));
     }
 }

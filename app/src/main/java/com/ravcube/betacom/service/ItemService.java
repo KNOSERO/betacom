@@ -1,9 +1,6 @@
 package com.ravcube.betacom.service;
 
-import com.ravcube.betacom.api.dto.ItemListResponseDTO;
-import com.ravcube.betacom.api.dto.ItemHistoryEntryResponse;
-import com.ravcube.betacom.api.dto.ItemResponseDTO;
-import com.ravcube.betacom.api.dto.UpdatedItemResponseDTO;
+import com.ravcube.betacom.api.dto.*;
 import com.ravcube.betacom.database.repository.ItemEntityRepository;
 import com.ravcube.betacom.domain.ItemHistoryProcessService;
 import com.ravcube.betacom.domain.ItemProcessService;
@@ -51,7 +48,7 @@ public class ItemService {
     }
 
     @Transactional(readOnly = true)
-    public List<ItemHistoryEntryResponse> history(UUID itemId) {
+    public List<ItemHistoryEntryResponseDTO> history(UUID itemId) {
         return itemHistoryProcessService.findHistory(itemId).stream()
                 .map(itemMapper::toHistoryResponse)
                 .toList();

@@ -5,7 +5,7 @@ import com.ravcube.betacom.api.dto.UpdatedItemResponseDTO;
 import com.ravcube.betacom.domain.spec.ItemResponse;
 import com.ravcube.betacom.domain.spec.ItemHistoryEntry;
 import com.ravcube.betacom.domain.spec.UpdatedItemResponse;
-import com.ravcube.betacom.api.dto.ItemHistoryEntryResponse;
+import com.ravcube.betacom.api.dto.ItemHistoryEntryResponseDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
 
@@ -16,5 +16,5 @@ public interface ItemMapper {
 
     UpdatedItemResponseDTO toUpdatedResponseDTO(UpdatedItemResponse updatedItemResponse);
 
-    ItemHistoryEntryResponse toHistoryResponse(ItemHistoryEntry itemHistoryEntry);
+    ItemHistoryEntryResponseDTO toHistoryResponse(ItemHistoryEntry itemHistoryEntry);
 }

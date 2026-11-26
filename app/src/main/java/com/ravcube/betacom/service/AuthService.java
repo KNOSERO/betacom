@@ -1,9 +1,9 @@
 package com.ravcube.betacom.service;
 
-import com.ravcube.betacom.api.dto.LoginRequest;
-import com.ravcube.betacom.api.dto.LoginResponse;
-import com.ravcube.betacom.api.dto.RegisterRequest;
-import com.ravcube.betacom.api.dto.RegisterResponse;
+import com.ravcube.betacom.api.dto.LoginRequestDTO;
+import com.ravcube.betacom.api.dto.LoginResponseDTO;
+import com.ravcube.betacom.api.dto.RegisterRequestDTO;
+import com.ravcube.betacom.api.dto.RegisterResponseDTO;
 import com.ravcube.betacom.domain.LoginProcessService;
 import com.ravcube.betacom.domain.UserRegistrationProcessService;
 import com.ravcube.betacom.domain.spec.AuthenticatedUser;
@@ -33,16 +33,16 @@ public class AuthService {
     }
 
     @Transactional
-    public RegisterResponse register(RegisterRequest request) {
+    public RegisterResponseDTO register(RegisterRequestDTO request) {
         RegisteredUser user = userRegistrationProcessService.register(request.login(), request.password());
-        return new RegisterResponse(user.userId(), user.login(), user.createdAt());
+        return new RegisterResponseDTO(user.userId(), user.login(), user.createdAt());
     }
 
     @Transactional(readOnly = true)
-    public LoginResponse login(LoginRequest request) {
+    public LoginResponseDTO login(LoginRequestDTO request) {
         AuthenticatedUser user = loginProcessService.authenticate(request.login(), request.password());
 
-        return new LoginResponse(
+        return new LoginResponseDTO(
                 jwtTokenService.issueToken(user.userId(), user.login()),
                 jwtProperties.expiration().toSeconds());
     }

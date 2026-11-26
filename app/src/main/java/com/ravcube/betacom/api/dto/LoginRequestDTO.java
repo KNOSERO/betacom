@@ -2,5 +2,5 @@ package com.ravcube.betacom.api.dto;
 
 import jakarta.validation.constraints.NotBlank;
 
-public record LoginRequest(@NotBlank String login, @NotBlank String password) {
+public record LoginRequestDTO(@NotBlank String login, @NotBlank String password) {
 }
