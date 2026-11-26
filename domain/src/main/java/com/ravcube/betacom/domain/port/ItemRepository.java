@@ -1,4 +1,4 @@
-package com.ravcube.betacom.domain;
+package com.ravcube.betacom.domain.port;
 
 import com.ravcube.betacom.domain.spec.ItemResponse;
 import com.ravcube.betacom.domain.spec.ItemSpec;

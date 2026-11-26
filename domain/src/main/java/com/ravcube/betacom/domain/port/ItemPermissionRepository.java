@@ -1,4 +1,4 @@
-package com.ravcube.betacom.domain;
+package com.ravcube.betacom.domain.port;
 
 import com.ravcube.betacom.domain.spec.PermissionSpec;
 import com.ravcube.betacom.domain.spec.ShareItemResponse;

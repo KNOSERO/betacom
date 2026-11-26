@@ -1,4 +1,4 @@
-package com.ravcube.betacom.domain;
+package com.ravcube.betacom.domain.port;
 
 import java.util.UUID;
 
