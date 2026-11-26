@@ -51,16 +51,6 @@ Podczas lokalnego uruchomienia Spring Boot wczytuje wartości z pliku `.env`. Zm
 
 Git ignoruje plik `.env`. Nie umieszczaj w repozytorium prawdziwych haseł ani sekretów. Wartości z `.env.example` są przeznaczone wyłącznie do lokalnego uruchamiania.
 
-## Uruchomienie lokalne
-
-Zainstaluj JDK 21 i uruchom MySQL na komputerze. Następnie, po utworzeniu pliku `.env`, uruchom aplikację:
-
-```powershell
-.\gradlew.bat :app:bootRun
-```
-
-Aplikacja będzie dostępna pod adresem <http://localhost:8080>. Na macOS i Linuksie uruchom ją poleceniem `./gradlew :app:bootRun`.
-
 ## Docker Compose
 
 Po zainstalowaniu Docker Compose i utworzeniu pliku `.env` uruchom aplikację i bazę danych w tle:
@@ -69,20 +59,6 @@ Po zainstalowaniu Docker Compose i utworzeniu pliku `.env` uruchom aplikację i 
 docker compose up --build -d
 ```
 
-Opcja `-d` uruchamia kontenery w tle. Logi działających usług nie będą wyświetlane w tej konsoli. Aplikacja będzie dostępna pod adresem <http://localhost:8080>. Aby wyświetlić logi na bieżąco, użyj polecenia:
-
-```sh
-docker compose logs -f
-```
-
-Polecenie usuwa kontenery, ale pozostawia wolumen z danymi bazy. Aby je wykonać, uruchom:
-
-```sh
-docker compose down
-```
-
-Aby usunąć także wolumen z danymi bazy, uruchom `docker compose down --volumes`.
-
 ## Podman Compose
 
 W Podman Desktop lub Linuksie zainstaluj narzędzie obsługujące Compose, np. `podman-compose` albo `docker-compose`. Następnie uruchom usługę API i bazę MySQL w tle:
@@ -90,33 +66,3 @@ W Podman Desktop lub Linuksie zainstaluj narzędzie obsługujące Compose, np. `
 ```sh
 podman compose up --build -d
 ```
-
-Opcja `-d` uruchamia kontenery w tle. Logi działających usług nie będą wyświetlane w tej konsoli. Aplikacja będzie dostępna pod adresem <http://localhost:8080>. Aby wyświetlić logi na bieżąco, użyj polecenia:
-
-```sh
-podman compose logs -f
-```
-
-Polecenie usuwa kontenery, ale pozostawia wolumen z danymi bazy. Aby je wykonać, uruchom:
-
-```sh
-podman compose down
-```
-
-Aby usunąć także wolumen z danymi bazy, uruchom `podman compose down --volumes`.
-
-## Testy
-
-Testy jednostkowe modułu `domain` uruchomisz poleceniem:
-
-```sh
-./gradlew :domain:test
-```
-
-W systemie Windows użyj `.\gradlew.bat :domain:test`. Testy integracyjne API korzystają z Testcontainers i wymagają działającego Dockera lub Podmana:
-
-```sh
-./gradlew :app:integrationTest
-```
-
-Testy integracyjne sprawdzają działanie API, historię zmian obiektów `Item` zapisywaną przez Envers, limit prób logowania, uprawnienia i równoczesną edycję `Item`.
