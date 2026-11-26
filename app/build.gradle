@@ -33,46 +33,7 @@ springBoot {
     mainClass = 'com.ravcube.betacom.BetacomApplication'
 }
 
-tasks.withType(Test).configureEach {
-    useJUnitPlatform()
-    systemProperty('podman.machine.name', project.providers.gradleProperty('podmanMachine').getOrElse('podman-machine-default'))
-
-    doFirst {
-        if (System.getenv('TESTCONTAINERS_HOST_OVERRIDE')) {
-            return
-        }
-
-        if (!System.getProperty('os.name').toLowerCase().contains('windows')) {
-            return
-        }
-
-        def machineName = systemProperties.get('podman.machine.name')
-        try {
-            def process = new ProcessBuilder('podman', 'machine', 'ssh', machineName,
-                    'ip', '-4', '-o', 'addr', 'show', 'eth0')
-                    .redirectErrorStream(true)
-                    .start()
-
-            if (!process.waitFor(10, java.util.concurrent.TimeUnit.SECONDS)) {
-                process.destroyForcibly()
-                logger.lifecycle("Could not query Podman machine '${machineName}'; using Testcontainers default host detection.")
-                return
-            }
-
-            def output = process.inputStream.getText('UTF-8')
-            def address = (output =~ /eth0\s+inet\s+([0-9.]+)\//)
-            if (process.exitValue() == 0 && address.find()) {
-                def host = address.group(1)
-                environment('TESTCONTAINERS_HOST_OVERRIDE', host)
-                logger.lifecycle("Using Podman machine address ${host} for Testcontainers port mappings.")
-            } else {
-                logger.lifecycle("Could not find a running Podman machine '${machineName}'; using Testcontainers default host detection.")
-            }
-        } catch (IOException ignored) {
-            logger.lifecycle('Podman CLI is unavailable; using Testcontainers default host detection.')
-        }
-    }
-}
+apply from: rootProject.file('gradle/podman-testcontainers.gradle')
 
 tasks.register('integrationTest', Test) {
     group = 'verification'
