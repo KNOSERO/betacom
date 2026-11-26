@@ -18,4 +18,4 @@ gradle.beforeProject { project ->
 
 rootProject.name = 'betacom'
 
-include 'app', 'core:database'
+include 'app', 'core:database', 'core:security', 'domain'

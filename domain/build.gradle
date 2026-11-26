@@ -1,0 +1,20 @@
+plugins {
+    id 'java-library'
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(libs.versions.java.get().toInteger())
+    }
+}
+
+dependencies {
+    implementation platform(libs.spring.boot.bom)
+    testImplementation(libs.junit.jupiter)
+    testImplementation(libs.mockito.core)
+    testRuntimeOnly(libs.junit.platform.launcher)
+}
+
+tasks.withType(Test).configureEach {
+    useJUnitPlatform()
+}

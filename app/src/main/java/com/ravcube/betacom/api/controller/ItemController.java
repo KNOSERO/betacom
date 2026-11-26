@@ -1,15 +1,12 @@
 package com.ravcube.betacom.api.controller;
 
-import com.ravcube.betacom.api.dto.CreateItemRequest;
-import com.ravcube.betacom.api.dto.ItemHistoryEntryResponse;
-import com.ravcube.betacom.api.dto.ItemListResponse;
-import com.ravcube.betacom.api.dto.ItemResponse;
-import com.ravcube.betacom.api.dto.PatchItemRequest;
-import com.ravcube.betacom.api.dto.ShareItemRequest;
-import com.ravcube.betacom.api.dto.ShareItemResponse;
-import com.ravcube.betacom.api.dto.UpdatedItemResponse;
+import com.ravcube.betacom.api.dto.*;
+import com.ravcube.betacom.service.ItemPermissionService;
+import com.ravcube.betacom.service.ItemService;
+import jakarta.validation.Valid;
 import java.util.List;
 import java.util.UUID;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -25,44 +22,62 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/items")
 public class ItemController {
 
+    private final ItemService itemService;
+    private final ItemPermissionService itemPermissionService;
+
+    public ItemController(ItemService itemService, ItemPermissionService itemPermissionService) {
+        this.itemService = itemService;
+        this.itemPermissionService = itemPermissionService;
+    }
+
     @PostMapping
-    public ResponseEntity<ItemResponse> create(@RequestBody CreateItemRequest request) {
-        return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
+    public ResponseEntity<ItemResponseDTO> create(@Valid @RequestBody CreateItemRequestDTO request) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(itemService.create(request.title(), request.content()));
     }
 
     @GetMapping
-    public ResponseEntity<List<ItemListResponse>> list() {
-        return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
+    public ResponseEntity<List<ItemListResponseDTO>> list() {
+        return ResponseEntity.status(HttpStatus.OK).body(itemService.findAll());
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<UpdatedItemResponse> update(
+    public ResponseEntity<UpdatedItemResponseDTO> update(
             @PathVariable("id") UUID id,
-            @RequestBody PatchItemRequest request) {
-        return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
+            @Valid @RequestBody PatchItemRequestDTO request) {
+
+        return ResponseEntity.status(HttpStatus.OK).body(itemService.update(
+                id,
+                request.title(),
+                request.content(),
+                request.version().longValue())
+        );
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable("id") UUID id) {
-        return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
+        itemService.delete(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @GetMapping("/{id}/history")
-    public ResponseEntity<List<ItemHistoryEntryResponse>> history(@PathVariable("id") UUID id) {
-        return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
+    public ResponseEntity<List<ItemHistoryEntryResponseDTO>> history(@PathVariable("id") UUID id) {
+        return ResponseEntity.ok(itemService.history(id));
     }
 
     @PostMapping("/{id}/share")
-    public ResponseEntity<ShareItemResponse> share(
+    public ResponseEntity<ShareItemResponseDTO> share(
             @PathVariable("id") UUID id,
-            @RequestBody ShareItemRequest request) {
-        return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
+            @Valid @RequestBody ShareItemRequestDTO request) {
+        ShareItemResponseWithStatusDTO result = itemPermissionService.share(id, request.userId(), request.role().name());
+        return ResponseEntity.status(result.status()).body(result.body());
     }
 
     @DeleteMapping("/{id}/share/{userId}")
     public ResponseEntity<Void> unshare(
             @PathVariable("id") UUID id,
             @PathVariable("userId") UUID userId) {
-        return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
+        itemPermissionService.delete(id, userId);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
