@@ -95,4 +95,11 @@ public final class Item {
         throw new AccessItemException("You no be owner to edit this item");
     }
 
+    public void isReadableBy(UUID id) {
+        if (this.ownerId.equals(id) || this.permission.stream().anyMatch(permission -> permission.hasPermission(id))) {
+            return;
+        }
+        throw new AccessItemException("Have no permission to read this item");
+    }
+
 }
