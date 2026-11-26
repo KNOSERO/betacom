@@ -63,6 +63,7 @@ public class ItemEntity {
 
     @Column(nullable = false, columnDefinition = "BOOLEAN DEFAULT FALSE")
     @Setter
+    @Builder.Default
     private boolean deleted = false;
 
     @Column(name = "created_at", nullable = false, updatable = false)
