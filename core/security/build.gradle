@@ -1,0 +1,6 @@
+dependencies {
+    api project(':domain')
+    api libs.spring.boot.starter.security
+    api libs.spring.boot.starter.oauth2.resource.server
+    compileOnly libs.servlet.api
+}
