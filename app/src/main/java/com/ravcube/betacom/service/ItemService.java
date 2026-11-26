@@ -1,11 +1,13 @@
 package com.ravcube.betacom.service;
 
 import com.ravcube.betacom.api.dto.ItemListResponseDTO;
+import com.ravcube.betacom.api.dto.ItemHistoryEntryResponse;
 import com.ravcube.betacom.api.dto.ItemResponseDTO;
 import com.ravcube.betacom.api.dto.UpdatedItemResponseDTO;
 import com.ravcube.betacom.database.repository.ItemEntityRepository;
+import com.ravcube.betacom.domain.ItemHistoryProcessService;
 import com.ravcube.betacom.domain.ItemProcessService;
-import com.ravcube.betacom.domain.SessionHelper;
+import com.ravcube.betacom.domain.port.SessionHelper;
 import com.ravcube.betacom.domain.spec.ItemResponse;
 import com.ravcube.betacom.domain.spec.UpdatedItemResponse;
 import com.ravcube.betacom.service.mapper.ItemListMapper;
@@ -22,6 +24,7 @@ public class ItemService {
     private final ItemEntityRepository itemRepository;
     private final ItemListMapper itemListMapper;
     private final ItemProcessService itemProcessService;
+    private final ItemHistoryProcessService itemHistoryProcessService;
     private final SessionHelper sessionHelper;
     private final ItemMapper itemMapper;
 
@@ -29,11 +32,13 @@ public class ItemService {
             ItemEntityRepository itemRepository,
             ItemListMapper itemListMapper,
             ItemProcessService itemProcessService,
+            ItemHistoryProcessService itemHistoryProcessService,
             SessionHelper sessionHelper,
             ItemMapper itemMapper) {
         this.itemRepository = itemRepository;
         this.itemListMapper = itemListMapper;
         this.itemProcessService = itemProcessService;
+        this.itemHistoryProcessService = itemHistoryProcessService;
         this.sessionHelper = sessionHelper;
         this.itemMapper = itemMapper;
     }
@@ -42,6 +47,13 @@ public class ItemService {
         return itemRepository.findVisibleItems(sessionHelper.getUserId())
                 .stream()
                 .map(itemListMapper::toResponse)
+                .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<ItemHistoryEntryResponse> history(UUID itemId) {
+        return itemHistoryProcessService.findHistory(itemId).stream()
+                .map(itemMapper::toHistoryResponse)
                 .toList();
     }
 

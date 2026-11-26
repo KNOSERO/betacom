@@ -62,7 +62,7 @@ public class ItemController {
 
     @GetMapping("/{id}/history")
     public ResponseEntity<List<ItemHistoryEntryResponse>> history(@PathVariable("id") UUID id) {
-        return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
+        return ResponseEntity.ok(itemService.history(id));
     }
 
     @PostMapping("/{id}/share")
