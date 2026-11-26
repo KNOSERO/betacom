@@ -10,6 +10,8 @@ Install JDK 21, then run the Spring Boot app from the project root:
 
 On macOS or Linux, use `./gradlew :app:bootRun` instead. The app starts at <http://localhost:8080>.
 
+The API uses bearer JWTs. Set `JWT_SECRET` to a random value of at least 32 UTF-8 bytes outside local development; `JWT_EXPIRATION` accepts a Spring duration such as `PT1H`.
+
 ## Run with Docker Compose
 
 Compose starts the application and MySQL, and keeps database files in a named volume:
