@@ -1,5 +1,6 @@
 dependencies {
     api project(':domain')
+    implementation project(':core:database')
     api libs.spring.boot.starter.security
     api libs.spring.boot.starter.oauth2.resource.server
     compileOnly libs.servlet.api
